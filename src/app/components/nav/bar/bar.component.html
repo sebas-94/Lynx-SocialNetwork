@@ -1,0 +1,63 @@
+<nav *ngIf="authService.user | async as user" class="navbar navbar-expand-sm azul1">
+
+  <!-- COL 1 -->
+  <div class="col">
+    <!-- Menú expansible-->
+    <button class="navbar-toggler" type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toogle navigation">
+      <i class="fas fa-grip-lines"></i>
+    </button>
+
+    <!-- Items del menú -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <!-- Principal -->
+        <li class="nav-item" title="Principal">
+          <a routerLink="/" class="nav-link p-3">
+            <i class="fas fa-home fa-2x"></i>
+          </a>
+        </li>
+        <!-- Mis publicaciones -->
+        <li class="nav-item" title="Mis publicaciones">
+          <a [routerLink]="['/user', user.uid]" class="nav-link p-3">
+            <i class="fas fa-clipboard fa-2x" ></i>
+          </a>
+        </li>
+        <!-- Usuarios -->
+        <li class="nav-item" title="Buscar usuarios">
+          <a routerLink="users" class="nav-link p-3">
+            <i class="fas fa-users fa-2x"></i>
+          </a>
+        </li>
+        <!-- Configuración -->
+        <li class="nav-item" title="Configuración">
+          <a routerLink="settings" class="nav-link p-3">
+            <i class="fas fa-cogs fa-2x"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- COL 2 -->
+  <div class="col text-center">
+    <!-- Logo centrado -->
+    <img src="../assets/img/LogoLynx.png" title="Página principal" class="link" width="45px"
+         routerLink="/">
+  </div>
+
+  <!-- COL 3 -->
+  <div class="col text-right">
+    <!-- Email del usuario activo -->
+    <span class="small p-3">
+        {{user.email}}
+      </span>
+    <!-- Botón de salir -->
+    <i class="fas fa-power-off btn btn-danger small" title="Cerrar sesión" (click)="authService.logout()"></i>
+  </div>
+
+</nav>

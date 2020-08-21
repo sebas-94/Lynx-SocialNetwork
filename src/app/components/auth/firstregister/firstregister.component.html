@@ -1,0 +1,57 @@
+<!-- Botón de salir -->
+<div class="container-fluid">
+
+  <!-- Título -->
+  <div class="row text-center mt-5">
+    <div class="col">
+      <h1 class="display-1">Lynx</h1><br><br>
+    </div>
+  </div>
+
+
+  <!-- Logo y formulario -->
+  <div class="row h-50">
+    <!-- Logo -->
+    <div class="col">
+      <img class="float-right" src="../assets/img/LogoLynx.png" alt="Lynx Logo" height="500vw">
+    </div>
+    <!-- Formulario 'Completar registro' -->
+    <div class="col text-center" style="margin: auto">
+
+      <form class="form float-left" [formGroup]="registerForm">
+
+        <h3><u>Completa tu registro</u></h3>
+
+        <br><br>
+        <div class="form-group">
+          <label for="inputuserIdName">UserId (No modificable):
+            <input type="text" id="inputuserIdName" class="form-control" formControlName="userIdName" placeholder="usuarioID">
+          </label>
+          <p class="alert alert-danger" *ngIf="formErrors.userIdName"> {{ formErrors.userIdName }} </p>
+        </div>
+
+        <div class="form-group">
+          <label for="inputuserName">Username:
+            <input type="text" id="inputUserName" class="form-control" formControlName="userName" placeholder="usuario">
+          </label>
+          <p class="alert alert-danger" *ngIf="formErrors.userName"> {{ formErrors.userName }} </p>
+        </div>
+
+
+        <button type="button" class="btn btn-primary" [disabled]="!registerForm.valid || errors" (click)="registrar()">Registrar</button>
+
+        <br><br><br>
+
+        <button type="button" class="btn btn-danger"(click)="authService.logout()">
+          <i class="fas fa-power-off btn btn-danger small"></i>
+          Cambiar de usuario
+        </button>
+
+      </form>
+
+
+    </div>
+  </div>
+
+
+</div>

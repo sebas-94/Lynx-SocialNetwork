@@ -1,0 +1,88 @@
+/* Cursor */
+.pointer {
+  cursor: pointer;
+}
+
+/* Barra de prograso */
+progress {
+  height: 5px;
+  width: 100%;
+}
+
+/* Comentario target */
+.target {
+  width: 50%;
+  resize: none;
+  background-color: #e4e4e2;
+}
+
+/* Icono */
+.icono {
+  max-width: 60px;
+  max-height: 60px;
+}
+
+.icono-lg {
+  max-width: 80px;
+  max-height: 80px;
+}
+
+.icono-xl {
+  max-width: 120px;
+  max-height: 120px;
+}
+
+/* Formulario redondeado */
+.rounded {
+  border-radius: 1rem;
+}
+
+/* TextArea biografía */
+.bio {
+  resize: none;
+  background-color: #e3f2fd;
+}
+
+/* Elementos navegación */
+.nav-item > a {
+  color: #ffa76d;
+}
+
+.nav-item:hover > a {
+  color: #f88a43;
+}
+
+/* Enlaces */
+.link {
+  cursor: pointer;
+  color: #1966ff;
+  text-decoration: underline;
+}
+
+.link:hover {
+  text-decoration: none;
+  color: #221eff;
+}
+
+/* Colores */
+.azul1 {
+  background-color: #e3f2fd;
+}
+
+.naranja1 {
+  background-color: #ffc8a7;
+}
+
+.gris1 {
+  background-color: #e4e4e2;
+}
+
+/* Botón UP */
+.botonUp {
+  right: 30px;
+  bottom: 10px;
+  position: fixed;
+  opacity: 60%;
+  border-radius: 60px;
+}
+

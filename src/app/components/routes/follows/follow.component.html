@@ -1,0 +1,113 @@
+<div class="container-fluid">
+
+  <div *ngIf="currentUser| async as u" class="text-center">
+    <h3>Seguidos de @<span class="pointer link" [routerLink]="['/user',u.id]">{{u.userIdName}}</span></h3>
+  </div>
+
+
+  <!-- Usuarios -->
+  <div class="row mt-3">
+    <ng-container *ngIf="follows | async as f">
+
+      <ng-container *ngIf="f.length != 0 else empty">
+
+        <!-- Por cada ususario crea una card -->
+        <ng-container *ngFor="let u of f" class="col">
+
+
+          <!-- Card -->
+          <div class="card mt-3 azul1" style="width: 24rem; height: 14.5rem; margin: auto">
+
+            <!-- Fila 1 -->
+            <div class="row mt-1">
+              <!-- Icono -->
+              <div class="col text-center">
+                <img class="icono-xl pointer img-thumbnail" [src]="u.icon" [title]="u.userName"
+                     [routerLink]="['/user',u.id]">
+              </div>
+              <!-- UserName y userIdName -->
+              <div class="col">
+                <p class="pointer" [routerLink]="['/user',u.id]" title="Ir al perfil del usuarios">
+                  <b>{{u.userName}}</b> @<span class="link pointer">{{u.userIdName}}</span>
+                </p>
+
+                <!-- Información de seguimiento -->
+                <ng-container *ngIf="u.id != this.authService.authUser.uid, else me">
+                  <div class="col text-center">
+                    <!-- Se muestra el botón de seguir o dejar de seguir -->
+                    <ng-container *ngIf="u.followers.includes(this.authService.authUser.uid), else follow">
+                      <button (click)="userService.unfollow(u.id)" class="btn btn-danger">
+                        <i class="fas fa-user-minus"></i> Unfollow
+                      </button>
+                    </ng-container>
+                    <ng-template #follow>
+                      <button (click)="userService.follow(u.id)" class="btn btn-success">
+                        <i class="fas fa-user-plus"></i> Follow
+                      </button>
+                    </ng-template>
+                  </div>
+
+                  <!-- Muestra si el usuario nos sigue o no -->
+                  <div class="col text-center">
+                    <ng-container *ngIf="u.follows.includes(this.authService.authUser.uid), else noF">
+                      <p>(Te sigue)</p>
+                    </ng-container>
+                    <ng-template #noF>
+                      <p>(No te sigue)</p>
+                    </ng-template>
+                  </div>
+                </ng-container>
+
+                <!-- Solo si es nuestro propio perfil -->
+                <ng-template #me>
+                  <div class="col text-center">
+                    <!-- Ir  mi perfil -->
+                    <button [routerLink]="['/user',u.id]" class="btn btn-info router-link-active">
+                      Mi perfil
+                    </button>
+                  </div>
+                </ng-template>
+
+              </div>
+            </div>
+
+            <!-- Fila 2 -->
+            <div class="row text-center">
+
+              <!-- Seguidores -->
+              <div class="col">
+                <div class="card card-body mt-3 gris1">
+                  <span [routerLink]="['/followers',u.id]" class="pointer">Seguidores: <br>{{u.followers.length}}</span>
+                </div>
+              </div>
+              <!-- Seguidos -->
+              <div class="col">
+                <div class="card card-body mt-3 gris1">
+                  <span [routerLink]="['/follows',u.id]" class="pointer">Seguidos: <br>{{u.follows.length}}</span>
+                </div>
+              </div>
+
+            </div>
+            <!-- Fin card -->
+          </div>
+
+        </ng-container>
+
+      </ng-container>
+    </ng-container>
+
+
+
+
+  </div>
+
+  <ng-template #empty>
+    <div *ngIf="currentUser| async as u" class="col text-center">
+      <p class="text-center mt-5">@<span class="pointer link" [routerLink]="['/user',u.id]">{{u.userIdName}}</span> no sigue a nadie</p>
+    </div>
+  </ng-template>
+
+
+</div>
+
+

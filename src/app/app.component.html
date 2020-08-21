@@ -1,0 +1,52 @@
+<!-- Cargando, comprobando autenticación -->
+<div *ngIf="loading; else finish">
+
+  <div class="container d-flex h-100 flex-column">
+    <div class="flex-grow-1"></div>
+
+    <!-- Spinner -->
+    <div class="row">
+      <div class="col text-center">
+        <div class="spinner-grow text-warning" style="width: 10rem; height: 10rem;" role="status"></div>
+      </div>
+    </div>
+    <!-- Texto -->
+    <div class="row">
+      <div class="col text-center">
+        <h2>Comprobando autenticación...</h2>
+      </div>
+    </div>
+
+    <div class="flex-grow-1"></div>
+  </div>
+
+</div>
+
+<!-- Cuando esté cargada la página -->
+<ng-template #finish>
+
+  <!-- Si el usuario está autenticado -->
+  <ng-container *ngIf="authService.user | async as user; else login">
+
+    <!-- Si ha completado el registro -->
+    <ng-container *ngIf="authService.completed; else noCompleted">
+      <!-- Barra de navegación -->
+      <app-bar></app-bar>
+      <!-- Resto -->
+      <router-outlet></router-outlet>
+    </ng-container>
+
+    <!-- Si no ha completado el registro -->
+    <ng-template #noCompleted>
+      <app-firstregister *ngIf="authService.completed === false || authService.completed === undefined"></app-firstregister>
+    </ng-template>
+
+  </ng-container>
+
+  <!-- Si no esta autenticado, pasa al menú de login -->
+  <ng-template #login>
+    <app-login></app-login>
+  </ng-template>
+
+</ng-template>
+

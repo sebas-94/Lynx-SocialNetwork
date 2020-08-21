@@ -1,0 +1,33 @@
+<ng-container>
+  <div class="container text-center">
+    <div class="col-md-10 offset-md-1 card card-body naranja1">
+
+      <!-- Formulario -->
+      <form class="form" [formGroup]="postForm">
+        <div class="row">
+          <div class="col form-group">
+            <ng-container *ngIf="currentUser | async; let user">
+              <!-- Mensaje para el usuario actual -->
+              <label for="post">
+                <h5>Hola, {{user.userName}}</h5>
+                <img [src]="user.icon" class="icono rounded pointer" title="Ir al perfil del usuario" [routerLink]="['/user', user.id]">
+              </label>
+              <!-- Text Area-->
+              <textarea class="form-control" formControlName="content" id="post" rows="5"></textarea>
+              <!-- Progreso -->
+              <progress [max]="maxLength" [value]="postLength"></progress>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <!-- Submit -->
+            <button type="button" class="btn btn-success" [disabled]="!postForm.valid" (click)="publicar()">Publicar</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,171 @@
+<ng-container *ngIf="currentUser | async; let u">
+
+  <div class="container">
+    <!-- Título -->
+    <h3 class="text-center mt-3">Editar perfil</h3>
+
+    <form class="form" [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+      <div class="col-8 offset-2 card card-body">
+
+        <div class="row">
+          <div class="col offset-2">
+            <span>Biografía: </span>
+          </div>
+        </div>
+
+        <!-- Foto de perfil -->
+        <div class="row">
+          <div class="col-2">
+            <img [src]="u.icon" class="icono-lg img-thumbnail" [title]="u.userName"/>
+            <!-- Cambiar imagen -->
+            <label for="inputImage" class="btn btn-primary mt-1"><small>Cambiar</small>
+              <input type="file" id="inputImage" (change)="firestorageService.upload($event)" accept="= .png, jpg"
+                     hidden>
+            </label>&nbsp;
+            <!-- Botón eliminar imagen -->
+            <label class="btn btn-danger mt-1" (click)="firestorageService.defaultImage()"><small>Eliminar</small>
+            </label>
+          </div>
+
+          <!-- Biografía editable -->
+          <div class="col">
+              <textarea class="form-control bio rounded" style="height: 100%" type="text" id="inputBio"
+                        formControlName="bio">
+              </textarea>
+          </div>
+
+        </div>
+
+        <!-- Errores en la biografía -->
+        <ng-container *ngIf="formErrors.bio">
+          <div class="row alert alert-danger offset-2">
+            <div class="col "><br>
+              <p> {{formErrors.bio}} </p>
+            </div>
+          </div>
+        </ng-container>
+
+
+        <!--Barra progreso subida imagen -->
+        <div class="row">
+          <div class="col-12">
+            <div class="progress mt-2" style="height: 1px;">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                   [style.width.%]="firestorageService.uploadProgress | async">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col-6">
+            <div>
+              <input type="text" id="inputUserName" class="form-control" formControlName="userName">
+              <p class="alert alert-danger" *ngIf="formErrors.userName"> {{ formErrors.userName }} </p>
+              @{{u.userIdName}}
+            </div>
+          </div>
+          <div class="offset-4 col text-right">
+            <p>Se unió: {{u.created.toDate() | date: 'dd/MM/yyyy'}}</p>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col">
+            <span>
+              Seguidores: <span class="link pointer" [routerLink]="['/followers', u.id]">{{u.followers.length}}</span>
+            </span><br>
+            <span>
+              Seguidos: <span class="link pointer" [routerLink]="['/follows', u.id]">{{u.follows.length}}</span>
+            </span>
+          </div>
+          <div class="text-right">
+            <button type="submit" class="btn btn-success" [disabled]="!editForm.valid">Registrar cambios</button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+
+
+    <h3 class="mt-3" style="text-align: center">Otras opciones</h3>
+    <div class="col-8 offset-2 card card-body">
+
+      <!-- Eliminar cuenta -->
+      <div class="text-rigth">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDelete">
+          Eliminar cuenta
+        </button>
+      </div>
+      <!-- Modal confirm -->
+      <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog"
+           aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Eliminar cuenta</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ¿Realmente deseas eliminar tu cuenta? Esta acción eliminará todos tus datos sin posibilidad de
+              recuperarlos.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteUser()" routerLinkActive="/">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cambiar contraseña -->
+      <br>
+
+      <div class="text-rigth">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#confirmRecover">
+          Cambiar contraseña
+        </button>
+      </div>
+      <!-- Modal confirm -->
+      <div class="modal fade" id="confirmRecover" tabindex="-1" role="dialog"
+           aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Cambiar contraseña</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Se le enviará un email a su cuenta personal para que pueda modificar su contraseña.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-success" data-dismiss="modal"
+                      (click)="this.userService.recoverPass()">Cambiar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+</ng-container>
+
+
+
+
+

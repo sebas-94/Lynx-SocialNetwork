@@ -1,0 +1,164 @@
+<div class="container-fluid -fluid">
+
+  <div *ngIf="currentPost| async as p">
+    <h3 class="text-center mt-3">'Likes' a: </h3>
+
+
+    <div class="container">
+      <div class="col-md-8 offset-md-2 card card-body azul1">
+        <!-- userName y userId (con router)-->
+        <div class="row justify-content-between">
+          <!-- Info usuario-->
+          <div class="col pointer">
+            <p style="display: inline-block" title="Ir al perfil del usuario" [routerLink]="['/user',p.author.id]">
+              <b>{{p.author.userName}}</b> @<span class="link">{{p.author.userIdName}}</span></p>
+          </div>
+          <!-- Fecha de publicación -->
+          <div class="col text-right">
+            <p>{{p.date.toDate() | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+          </div>
+        </div>
+        <!-- Icono de usuario -->
+        <div class="row">
+          <div class="col-2 mr-2">
+            <img [src]="p.author.icon" class="icono-lg pointer img-thumbnail" [title]="p.author.userName"
+                 [routerLink]="['/user',p.author.id]"/>
+            <br>
+          </div>
+          <!-- Contenido de la publicación -->
+          <div class="col rounded gris1 ml-2">
+            <p>{{p.content}}</p>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <!-- Likes -->
+          <div class="col text-center">
+            <ng-container *ngIf="p.likes.includes(authService.authUser.uid); else likeFalse">
+              <button (click)="postService.unlike(p)" class="btn btn-danger">
+                <i class="fas fa-heart fa"></i>
+              </button>
+            </ng-container>
+            <ng-template #likeFalse>
+              <button (click)="postService.like(p)" class="btn btn-dark">
+                <i class="fas fa-heart fa"></i>
+              </button>
+            </ng-template>
+            <ng-container>
+              {{p.likes.length}}
+            </ng-container>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+
+  </div>
+
+  <hr/>
+
+  <!-- Usuarios -->
+  <div class="row mt-3">
+    <ng-container *ngIf="likesUsers | async as l">
+
+      <ng-container *ngIf="l.length != 0 else empty">
+
+        <!-- Por cada ususario crea una card -->
+        <ng-container *ngFor="let u of l" class="col">
+
+
+          <!-- Card -->
+          <div class="card mt-3 azul1" style="width: 24rem; height: 14.5rem; margin: auto">
+
+            <!-- Fila 1 -->
+            <div class="row mt-1">
+              <!-- Icono -->
+              <div class="col text-center">
+                <img class="icono-xl pointer img-thumbnail" [src]="u.icon" [title]="u.userName"
+                     [routerLink]="['/user',u.id]">
+              </div>
+              <!-- UserName y userIdName -->
+              <div class="col">
+                <p class="pointer" [routerLink]="['/user',u.id]" title="Ir al perfil del usuarios">
+                  <b>{{u.userName}}</b> @<span class="link pointer">{{u.userIdName}}</span>
+                </p>
+
+                <!-- Información de seguimiento -->
+                <ng-container *ngIf="u.id != this.authService.authUser.uid, else me">
+                  <div class="col text-center">
+                    <!-- Se muestra el botón de seguir o dejar de seguir -->
+                    <ng-container *ngIf="u.followers.includes(this.authService.authUser.uid), else follow">
+                      <button (click)="userService.unfollow(u.id)" class="btn btn-danger">
+                        <i class="fas fa-user-minus"></i> Unfollow
+                      </button>
+                    </ng-container>
+                    <ng-template #follow>
+                      <button (click)="userService.follow(u.id)" class="btn btn-success">
+                        <i class="fas fa-user-plus"></i> Follow
+                      </button>
+                    </ng-template>
+                  </div>
+
+                  <!-- Muestra si el usuario nos sigue o no -->
+                  <div class="col text-center">
+                    <ng-container *ngIf="u.follows.includes(this.authService.authUser.uid), else noF">
+                      <p>(Te sigue)</p>
+                    </ng-container>
+                    <ng-template #noF>
+                      <p>(No te sigue)</p>
+                    </ng-template>
+                  </div>
+                </ng-container>
+
+                <!-- Solo si es nuestro propio perfil -->
+                <ng-template #me>
+                  <div class="col text-center">
+                    <!-- Ir  mi perfil -->
+                    <button [routerLink]="['/user',u.id]" class="btn btn-info router-link-active">
+                      Mi perfil
+                    </button>
+                  </div>
+                </ng-template>
+
+              </div>
+            </div>
+
+            <!-- Fila 2 -->
+            <div class="row text-center">
+
+              <!-- Seguidores -->
+              <div class="col">
+                <div class="card card-body mt-3 gris1">
+                  <span [routerLink]="['/followers',u.id]" class="pointer">Seguidores: <br>{{u.followers.length}}</span>
+                </div>
+              </div>
+              <!-- Seguidos -->
+              <div class="col">
+                <div class="card card-body mt-3 gris1">
+                  <span [routerLink]="['/follows',u.id]" class="pointer">Seguidos: <br>{{u.follows.length}}</span>
+                </div>
+              </div>
+
+            </div>
+            <!-- Fin card -->
+          </div>
+
+        </ng-container>
+
+      </ng-container>
+    </ng-container>
+
+
+  </div>
+
+  <ng-template #empty>
+    <div *ngIf="currentPost| async as p" class="col text-center">
+      <p>Nadie le ha dado aún 'me gusta' a esta publicación.</p>
+    </div>
+  </ng-template>
+
+
+</div>
+
+

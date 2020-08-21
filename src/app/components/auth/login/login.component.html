@@ -1,0 +1,107 @@
+<div class="container-fluid">
+
+  <!-- Título -->
+  <div class="row text-center mt-5">
+    <div class="col">
+      <h1 class="display-1">Lynx</h1><br><br>
+    </div>
+  </div>
+
+  <!-- Logo y formulario -->
+  <div class="row h-50">
+    <!-- Logo -->
+    <div class="col">
+      <img class="float-right" src="../assets/img/LogoLynx.png" alt="Lynx Logo" height="500vw">
+    </div>
+    <!-- Formulario 'Inicio de sesión' -->
+    <div class="col text-center" style="margin: auto">
+      <form class="form float-left">
+
+        <h3><u>Inicio de sesión</u></h3>
+        <br><br>
+
+        <input class="form-control" type="text" name="email" placeholder="Escribe tu email..." autocomplete="on"
+               [(ngModel)]="authService.email"/>
+        <br>
+        <input class="form-control" type="password" name="password" placeholder="Escribe tu password..."
+               autocomplete="on"
+               [(ngModel)]="authService.password"/>
+        <br>
+
+        <!-- Login EMAIL -->
+        <button (click)="authService.emailLogin()" class="btn btn-success">
+          <i class="fas fa-envelope"></i>
+          Login
+        </button>
+        <br><br>
+        <!-- Contraseña olvidada -->
+        <p class="link" data-toggle="modal" data-target="#confirmRecover">Olvidé mi contraseña</p>
+        <!-- Registro -->
+        <p class="link" data-toggle="modal" data-target="#register">Aún no estoy registrado</p>
+        <br><br><br>
+        <!-- Login Google -->
+        <button (click)="authService.googleLogin()" class="btn btn-danger">
+          <i class="fab fa-google"></i>
+          Google Login
+        </button>
+
+        <!-- Modal  contraseña olvidada -->
+        <form class="form">
+          <div class="modal fade" id="confirmRecover" tabindex="-1" role="dialog"
+               aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Restablecer contraseña</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Se le enviará un email a su cuenta personal para que pueda modificar su contraseña.
+                  <br>
+                  <input class="form-control" type="text" name="emailRecover" placeholder="Escribe tu email..."
+                         autocomplete="on"
+                         [(ngModel)]="authService.emailRecover"/>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-success" data-dismiss="modal"
+                          (click)="authService.recoverPass(authService.emailRecover); authService.emailRecover=''">Restablecer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Modal registro -->
+        <form class="form">
+          <div class="modal fade" id="register" tabindex="-1" role="dialog"
+               aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Registro</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <app-register></app-register>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+
+      </form>
+    </div>
+  </div>
+
+
+</div>
+
+
+

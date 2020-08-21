@@ -1,0 +1,295 @@
+<ng-container *ngIf="user | async; let u">
+
+  <div class="container">
+    <!-- Título -->
+    <ng-container *ngIf="u.id === this.authService.authUser.uid, else hiUserTitle">
+      <div class="col-6 offset-3 card card-body mt-3 mb-3">
+        <h3 class="text-center mt-3"><b>Mi perfil</b></h3>
+      </div>
+    </ng-container>
+    <ng-template #hiUserTitle>
+      <div class="col-6 offset-3 card card-body mt-3 mb-3">
+        <h3 class="text-center mt-3">Perfil de <b>@{{u.userIdName}}</b></h3>
+      </div>
+    </ng-template>
+
+
+    <div class="col-8 offset-2 card card-body">
+
+      <!-- Foto de perfil -->
+      <div class="row">
+        <div class="col-2 mr-2">
+          <img [src]="u.icon" class="icono-lg img-thumbnail" [title]="u.userName" alt=""/>
+        </div>
+        <!-- Biografía -->
+        <div class="col ml-2">
+          <textarea class="bio rounded" style="height: 100%; width: 100%" readonly>{{u.bio}}</textarea>
+        </div>
+      </div>
+
+      <!-- userIdName -->
+      <div class="row mt-2">
+        <div class="col">
+          @<span class="link pointer">{{u.userIdName}}</span>
+        </div>
+        <div class="col text-right">
+          Se unió: {{u.created.toDate() | date: 'dd/MM/yyyy'}}
+        </div>
+      </div>
+
+      <!-- userName -->
+      <div class="row">
+        <div class="col">
+          <span><b>{{u.userName}}</b></span>
+        </div>
+      </div>
+
+      <!-- Seguidores y seguidos -->
+      <div class="row mt-3">
+
+        <div class="col">
+          <div class="row mt-3">
+            <div class="col">
+              Seguidores: <span class="link pointer" [routerLink]="['/followers', u.id]">{{u.followers.length}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              Seguidos: <span class="link pointer" [routerLink]="['/follows', u.id]">{{u.follows.length}}</span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col" *ngIf="u.id !== this.authService.authUser.uid, else me">
+          <!-- Muestra si el usuario nos sigue o no -->
+          <div class="row mt-3">
+            <div class="col text-right">
+              <ng-container *ngIf="u.followers.includes(this.authService.authUser.uid), else follow">
+                <button (click)="userService.unfollow(u.id)" class="btn btn-danger">
+                  <i class="fas fa-user-minus"></i> Unfollow
+                </button>
+              </ng-container>
+              <ng-template #follow>
+                <button (click)="userService.follow(u.id)" class="btn btn-success">
+                  <i class="fas fa-user-plus"></i> Follow
+                </button>
+              </ng-template>
+            </div>
+          </div>
+
+          <!-- Muestra si el usuario nos sigue o no -->
+          <div class="row">
+            <div class="col text-right">
+              <ng-container *ngIf="u.follows.includes(this.authService.authUser.uid), else noF">
+                <p>(Te sigue)</p>
+              </ng-container>
+              <ng-template #noF>
+                <p>(No te sigue)</p>
+              </ng-template>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Si es nuestro perfil -->
+      <ng-template #me>
+      </ng-template>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- Siguiente card -->
+  <div>
+
+    <ng-container *ngIf="u.id === this.authService.authUser.uid, else hiUser">
+      <div class="col-6 offset-3 card card-body mt-3 mb-3">
+        <h4>Mis publicaciones: </h4>
+      </div>
+    </ng-container>
+    <ng-template #hiUser>
+      <div class="col-6 offset-3 card card-body mt-3 mb-3">
+        <h4>Publicaciones de <b>{{u.userName}}</b>: </h4>
+      </div>
+    </ng-template>
+
+
+    <!-- Publicaciones seguidas -->
+    <ng-container *ngFor="let my of posts | async">
+      <div class="container">
+        <div class="col-md-8 offset-md-2 card card-body azul1">
+          <!-- userName y userId (con router)-->
+          <div class="row justify-content-between">
+            <!-- Info usuario-->
+            <div class="col pointer">
+              <p style="display: inline-block" title="Ir al perfil del usuario" [routerLink]="['/user',my.author.id]">
+                <b>{{my.author.userName}}</b> @<span class="link">{{my.author.userIdName}}</span></p>
+            </div>
+            <!-- Repost o no -->
+            <!-- FALTA -->
+            <!-- Fecha de publicación -->
+            <div class="col text-right">
+              <p>{{my.date.toDate() | date: 'dd/MM/yyyy HH:mm:ss'}}</p>
+            </div>
+          </div>
+          <!-- Icono de usuario -->
+          <div class="row">
+            <div class="col-2 mr-2">
+              <img [src]="my.author.icon" class="icono-lg pointer img-thumbnail" [title]="my.author.userName"
+                   [routerLink]="['/user',my.author.id]"/>
+              <br>
+            </div>
+            <!-- Contenido de la publicación -->
+            <div class="col rounded gris1 ml-2">
+              <p>{{my.content}}</p>
+            </div>
+          </div>
+
+          <!-- Opciones -->
+          <div class="row mt-3 ml-2">
+            <div class="offset-1 col">
+              <div class="row text-center">
+                <!-- Comentar-->
+                <div class="col-3">
+                  <button (click)="postService.setTarget(my)" class="btn btn-dark" data-toggle="modal"
+                          data-target="#replyModal">
+                    <i class="fas fa-comment-dots fa"></i>
+                  </button>
+                  <!-- Modal reply -->
+                  <div class="modal fade" id="replyModal" tabindex="-1" role="form">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Responder</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <!-- Contenido al que se le va a responder-->
+                        <div class="modal-body">
+                          <ng-container *ngIf="postService.targetPost">
+                            <h6>Publicación de @<b>{{postService.targetPost.author.userIdName}}</b></h6>
+                            <textarea class="target rounded" rows="5"
+                                      readonly>{{postService.targetPost.content}}</textarea>
+                          </ng-container>
+                        </div>
+                        <!-- Respuesta -->
+                        <div class="modal-body">
+                          <h3>Respuesta: </h3>
+                          <!-- Formulario -->
+                          <form class="form" [formGroup]="postForm">
+                            <div class="row">
+                              <div class="col form-group">
+                                <!-- Text Area-->
+                                <textarea class="form-control bio" formControlName="content"
+                                          rows="5"></textarea>
+                                <!-- Progreso -->
+                                <progress [max]="replymaxLength" [value]="replyLength"></progress>
+                              </div>
+                            </div>
+                          </form>
+
+
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                          <button [disabled]="!postForm.valid"
+                                  (click)="postService.reply(postService.targetPost.ref, this.post)"
+                                  class="btn btn-success" data-dismiss="modal">
+                            <i class="far fa-plus-square"></i>
+                            Publicar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Número de respuestas -->
+                  <span class="pointer link p-2" [routerLink]="['/post',my.ref]">
+                  {{my.countReplies}}
+                </span>
+                </div>
+                <!-- Repost -->
+                <div class="col-3">
+                  <ng-container *ngIf="my.reposts.includes(authService.authUser.uid); else repostFalse">
+                    <button (click)="postService.unrepost(my)" class="btn btn-success">
+                      <i class="fas fa-retweet fa"></i>
+                    </button>
+                  </ng-container>
+                  <ng-template #repostFalse>
+                    <button (click)="postService.repost(my)" class="btn btn-dark">
+                      <i class="fas fa-retweet fa"></i>
+                    </button>
+                  </ng-template>
+                  <ng-container>
+                <span class="pointer link p-2" [routerLink]="['/reposts',my.ref]">
+                  {{my.reposts.length}}
+                </span>
+                  </ng-container>
+                </div>
+                <!-- Likes -->
+                <div class="col-3">
+                  <ng-container *ngIf="my.likes.includes(authService.authUser.uid); else likeFalse">
+                    <button (click)="postService.unlike(my)" class="btn btn-danger">
+                      <i class="fas fa-heart fa"></i>
+                    </button>
+                  </ng-container>
+                  <ng-template #likeFalse>
+                    <button (click)="postService.like(my)" class="btn btn-dark">
+                      <i class="fas fa-heart fa"></i>
+                    </button>
+                  </ng-template>
+                  <ng-container>
+                <span class="pointer link p-2" [routerLink]="['/likes',my.ref]">
+                  {{my.likes.length}}
+                </span>
+                  </ng-container>
+                </div>
+                <!-- Resto opciones -->
+                <div class="col-3 dropdown">
+                  <button class="btn btn-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-h fa"></i>
+                  </button>
+                  <!-- Opciones -->
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- Compartir publicación -->
+                    <ng-container>
+                      <a class="dropdown-item pointer" (click)="postService.share(my.ref)"> Compartir
+                        publicación (FALTA IMPLEMENTAR)</a>
+                    </ng-container>
+                    <!-- Borrar post -->
+                    <ng-container *ngIf="my.author.id == authService.authUser.uid">
+                      <a class="dropdown-item pointer text-danger" (click)="postService.delete(my.ref)"> Eliminar
+                        publicación</a>
+                    </ng-container>
+                    <!-- Unfollow -->
+                    <ng-container *ngIf="my.author.id != authService.authUser.uid">
+                      <ng-container *ngIf="u.followers.includes(this.authService.authUser.uid)">
+                        <a class="dropdown-item pointer" (click)="userService.unfollow(my.author.id)"> Dejar de
+                          seguir</a>
+                      </ng-container>
+                      <a class="dropdown-item pointer"> Reportar (FALTA IMPLEMENTAR)</a>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+    </ng-container>
+
+
+  </div>
+
+
+</ng-container>

@@ -1,0 +1,42 @@
+<form class="form" [formGroup]="registerForm">
+
+  <div class="form-group">
+    <label for="inputEmail">E-mail:
+      <input type="text" id="inputEmail" class="form-control" formControlName="email" placeholder="ejemplo@gmail.com" autofocus>
+    </label>
+    <p class="alert alert-danger" *ngIf="formErrors.email"> {{ formErrors.email }} </p>
+  </div>
+
+  <div class="form-group">
+    <label for="inputuserIdName">UserId (No modificable):
+      <input type="text" id="inputuserIdName" class="form-control" formControlName="userIdName"  placeholder="usuarioID">
+    </label>
+    <p class="alert alert-danger" *ngIf="formErrors.userIdName"> {{ formErrors.userIdName }} </p>
+  </div>
+
+  <div class="form-group">
+    <label for="inputuserName">Username:
+      <input type="text" id="inputUserName" class="form-control" formControlName="userName" placeholder="usuario">
+    </label>
+    <p class="alert alert-danger" *ngIf="formErrors.userName"> {{ formErrors.userName }} </p>
+  </div>
+
+  <div class="form-group">
+    <label for="inputPass">Contraseña:
+      <input type="password" id="inputPass" class="form-control" formControlName="pass">
+    </label>
+    <p class="alert alert-danger" *ngIf="formErrors.pass"> {{ formErrors.pass}} </p>
+  </div>
+
+  <div class="form-group">
+    <label for="inputPassCheck">Repita la contraseña:
+      <input type="password" id="inputPassCheck" class="form-control" formControlName="passCheck">
+    </label>
+    <p class="alert alert-danger" *ngIf="formErrors.passCheck"> {{ formErrors.passCheck}} </p>
+  </div>
+
+  <br>
+  <button type="button" class="btn btn-primary" [hidden]="!registerForm.valid || errors" data-dismiss="modal"
+          (click)="registrar()">Registrar</button>
+
+</form>
